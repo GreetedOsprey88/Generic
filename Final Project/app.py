@@ -16,6 +16,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
+    #Train model here?
     return render_template('index.html')
 
 @app.route('/match_predictor', methods=['POST','GET'])
