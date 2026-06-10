@@ -2,3 +2,4 @@
 #You could probably use the wc_all_editions to test the model or trainning. 
 #You could use the wc_2026_matches to predict the winners of the 2026 world cup.
 #its in strings so be careful 
+#edward kaito ryan
