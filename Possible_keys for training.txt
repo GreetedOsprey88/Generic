@@ -1,0 +1,19 @@
+From all matches:
+1. year
+2. team1
+3. team2
+4. score1
+5. score2
+6. stage
+
+From top scorer
+1. year
+2. country
+3. goals?
+4 . team_result
+
+From 2026 team
+1. team
+2. fifa-rank - important
+3. best_wc_result
+
