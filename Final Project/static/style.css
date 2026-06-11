@@ -75,13 +75,9 @@ nav a:hover {
 
 .hero-content {
     position: relative;
-
     text-align: center;
-
     color: white;
-
     max-width: 800px;
-
     padding: 20px;
 }
 
@@ -110,19 +106,13 @@ nav a:hover {
 
 button {
     padding: 15px 30px;
-
     border: none;
     border-radius: 8px;
-
     background: #f97316;
-
     color: white;
-
     font-size: 1rem;
     font-weight: bold;
-
     cursor: pointer;
-
     transition: 0.3s;
 }
 
@@ -133,31 +123,20 @@ button:hover {
 
 .features {
     display: flex;
-
     justify-content: center;
-
     gap: 30px;
-
     padding: 80px 50px;
-
     flex-wrap: wrap;
-
     background: white;
 }
 
 .feature-card {
     width: 300px;
-
     padding: 30px;
-
     border-radius: 12px;
-
     text-align: center;
-
     background: #ffffff;
-
     box-shadow: 0px 4px 20px rgba(0,0,0,0.1);
-
     transition: 0.3s;
 }
 
