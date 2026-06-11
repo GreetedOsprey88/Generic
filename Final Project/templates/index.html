@@ -1,33 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>World Cup Predictions</title>
-    <link rel="stylesheet" href="../static/style.css" />
-    l
-  </head>
-  <body>
-    <img
-      class="wallPaper"
-      src="../images/wallPaper.png"
-      alt="Images of the Trophy"
-    />
-    <h1 class="text-center py-5">World Cup</h1>
-    <div class="row">
-      <div class="col-md-5">
-        <form action="{{url_for('match_predictor')}}" method="post">
-          <button type="submit" class="btn btn-primary" style="width: 30%">
-            Predict a Match
-          </button>
-        </form>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Cup Predictor</title>
 
-        <form action="{{url_for('wc_predictor')}}" method="post">
-          <button class="btn btn-primary" style="width: 30%">
-            Get Prediction of World Cup
-          </button>
-        </form>
-      </div>
-    </div>
-  </body>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo">World Cup Predictor</div>
+
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Match Predictor</a></li>
+            <li><a href="#">World Cup Predictor</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+
+        <div class="overlay"></div>
+
+        <div class="hero-content">
+            <h1>Predict the Game</h1>
+
+            <p>
+                Machine Learning stuff to predict individual matches and
+                maybe the winner
+            </p>
+
+            <div class="button-group">
+
+                <form action="{{ url_for('match_predictor') }}" method="post">
+                    <button type="submit">
+                        Predict a Match
+                    </button>
+                </form>
+
+                <form action="{{ url_for('wc_predictor') }}" method="post">
+                    <button type="submit">
+                        Predict World Cup Winner
+                    </button>
+                </form>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="features">
+
+        <div class="feature-card">
+            <h2>Match Predictions</h2>
+
+            <p>
+                Predict the outcome of individual matches
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <h2>Tournament Simulation</h2>
+
+            <p>
+                Simulate an entire World Cup tournament and identify the
+                most likely champion.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <h2>Machine Learning</h2>
+
+            <p>
+                HitsGradientBoostingClassifier or whatevs
+            </p>
+        </div>
+
+    </section>
+
+</body>
 </html>
