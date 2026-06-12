@@ -3,6 +3,7 @@
 #You could use the wc_2026_matches to predict the winners of the 2026 world cup.
 #its in strings so be careful 
 
+
 import json
 from flask import Flask, request, render_template
 from sklearn.tree import export_text
@@ -24,7 +25,33 @@ def get_fifa_rank():
     
     return data
 
+#This creates another key called winner which determines which of the two teams won the match. 0 being the team1 won and 1 being team2 won and 3 being a draw. 
+def match_winner() :
+    with open('wc_all_matches.json', "r", encoding="utf-8") as f:
+        data = json.load(f)
+    # Python
+    for item_dict in data:
+        if item_dict["score1"] > item_dict["score2"]:
+            item_dict["winner"] = 0
+        elif item_dict["score1"] < item_dict["score2"]:
+            item_dict["winner"] = 1
+        else:
+            item_dict["winner"] = 3  
+    
 
+    return data
+def train_model(all_matches):
+    global match_x, match_y, match_model
+    match_x = pd.DataFrame({
+        "team1": [item_dict["team1"] for item_dict in all_matches],
+        "team2": [item_dict["team2"] for item_dict in all_matches],
+    })
+    #match_y = pd.DataFrame(match_y)
+    #X_train, X_test, y_train, y_test = train_test_split(match_x, match_y, test_size=0.2, random_state=42)
+    #match_model.fit(X_train, y_train)
+    #y_pred = match_model.predict(X_test)
+    #accuracy = accuracy_score(y_test, y_pred)
+    #print("Accuracy:", accuracy)
 #FLASK APP
 app = Flask(__name__)
 
@@ -43,8 +70,8 @@ def match_predictor():
     extracted_data = [{key: item[key] for key in desired_keys} for item in a]
     match_x = pd.DataFrame(extracted_data)
     
-    print(match_x)
-    return extracted_data
+    b = match_winner()
+    return b
 
 @app.route('/wc_predictor', methods=["POST","GET"])
 def wc_predictor():
