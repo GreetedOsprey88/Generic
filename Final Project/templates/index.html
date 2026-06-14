@@ -14,12 +14,12 @@
         <div class="logo">World Cup Predictor</div>
 
         <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Match Predictor</a></li>
-            <li><a href="#">World Cup Predictor</a></li>
+            <li><a href="{{ url_for('home')}}">Home</a></li>
+            <li><a href="{{url_for('match_predictor')}}">Match Predictor</a></li>
+            <li><a href="{{ url_for('wc_predictor')}}">World Cup Predictor</a></li>
         </ul>
     </nav>
-
+    
     <section class="hero">
 
         <div class="overlay"></div>

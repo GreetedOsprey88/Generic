@@ -3,6 +3,9 @@
 #You could use the wc_2026_matches to predict the winners of the 2026 world cup.
 #its in strings so be careful 
 
+#I Just listing my thought here, You all can ignore this...
+#I relized that we can have two separed model, One for match, one for the overall tornment. We can input all the data for winners and like other places for each team as the x for each year, Then we use the winner of the tornment as the y. 
+#We can use each match for the match predicotr, Input team 1 and team2 and fifa rank for both, and Idk if we shoudl do all the games... Porabblyy eevrything after 2000s or something. But use the winner thing as the y.
 
 import json
 from flask import Flask, request, render_template
