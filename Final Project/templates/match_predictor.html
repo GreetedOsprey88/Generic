@@ -1,18 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>Match Predictor</title>
-  </head>
-  <body>
-    <h1 class="text-center py-5">Predict a Match</h1>
-    <div class="row">
-      <div class="col-md-4"></div>
-      <div class="col-md-4">
-        <form action="{{ url_for('match_prediction')}}" method="post"></form>
-      </div>
-      <div class="col-md-4"></div>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">
+        World Cup Predictor
     </div>
-  </body>
+
+    <ul>
+        <li>
+            <a href="{{ url_for('home') }}">
+                Home
+            </a>
+        </li>
+    </ul>
+</nav>
+
+<section class="hero">
+
+    <div class="overlay"></div>
+
+    <div class="hero-content">
+
+        <h1>Match Predictor</h1>
+
+        <p>
+            Predict the winner of a future FIFA match
+            using machine learning.
+        </p>
+
+        <div class="feature-card">
+
+            <h2>
+                Model Accuracy:
+                {{ accuracy }}%
+            </h2>
+
+            <form method="POST">
+
+                <label>
+                    Team 1
+                </label>
+
+                <br><br>
+
+                <select name="team1">
+
+                    {% for team in teams %}
+
+                    <option
+                        value="{{ team }}"
+                        {% if team == selected_team1 %}
+                        selected
+                        {% endif %}
+                    >
+                        {{ team }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+                <br><br>
+
+                <label>
+                    Team 2
+                </label>
+
+                <br><br>
+
+                <select name="team2">
+
+                    {% for team in teams %}
+
+                    <option
+                        value="{{ team }}"
+                        {% if team == selected_team2 %}
+                        selected
+                        {% endif %}
+                    >
+                        {{ team }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+                <br><br>
+
+                <button type="submit">
+                    Predict Match
+                </button>
+
+            </form>
+
+            {% if prediction %}
+
+            <hr style="margin:20px 0;">
+
+            <h2>
+                Prediction
+            </h2>
+
+            <p>
+                {{ prediction }}
+            </p>
+
+            {% if confidence %}
+
+            <p>
+                Confidence:
+                {{ confidence }}%
+            </p>
+
+            {% endif %}
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</section>
+
+</body>
 </html>
