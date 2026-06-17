@@ -41,6 +41,16 @@ def load_matches():
 
         return json.load(file)
 
+def load_2026_matches():
+
+    with open(
+        "Final Project/wc_all_matches.json",
+        "r",
+        encoding="utf-8"
+    ) as file:
+
+        return json.load(file)
+
 
 def build_team_lookup():
 
@@ -225,7 +235,7 @@ def match_predictor():
     methods=["GET", "POST"]
 )
 def wc_predictor():
-
+    # this is for the world cup group stage, I think I am having a bit of problemts but that is easily fixeddd. Check the error message. I don't know really how your ml works... Sry :(
     teams = load_teams()
     group_stage= [{"A" : []}, 
                   {"B" : []}, 
@@ -248,60 +258,52 @@ def wc_predictor():
                 group_dict[group_key].append({team["team"]: 0})
                 break
             
-    for match in load_matches():
+    for match in load_2026_matches():
         if match["stage"] == "Group Stage":    
-            rank1 = team_lookup[match["team1"]]["rank"]
-            rank2 = team_lookup[match["team2"]]["rank"]
+            
 
-            same_confederation = int(
-                team_lookup[match["team1"]]["confederation"]
-                ==
-                team_lookup[match["team2"]]["confederation"]
-    )
+            features = [[
+                match["team1"],
+                match["team2"]
+            ]]
 
-    features = [[
-        rank1,
-        rank2,
-        rank1 - rank2,
-        same_confederation
-    ]]
 
-    probabilities = match_model.predict_proba(features)[0]
+            probabilities = match_model.predict_proba(features)[0]
 
-    prediction = match_model.predict(features)[0]
+            prediction = match_model.predict(features)[0]
 
-    confidence = round(
-        max(probabilities) * 100,
-        2
-    )
+            confidence = round(
+                max(probabilities) * 100,
+                2
+            )
 
-    if confidence is not None and 40 <= confidence <= 60:
-        #find the teams and both add one to their score. 
-        for group_dict in group_stage:
-            group_key = list(group_dict.keys())[0]
-            if match["group"] in group_key:
-                for team_dict in group_dict[group_key]:
-                    if match["team1"] in team_dict:
-                        team_dict[match["team1"]] += 1
-                    if match["team2"] in team_dict:
-                        team_dict[match["team2"]] += 1
-                break        
-    elif prediction == 0:
-        for group_dict in group_stage:
-            group_key = list(group_dict.keys())[0]
-            if match["group"] in group_key:
-                for team_dict in group_dict[group_key]:
-                    if match["team1"] in team_dict:
-                        team_dict[match["team1"]] += 3
-                break
-    elif prediction == 1:
-        for group_dict in group_stage:
-            group_key = list(group_dict.keys())[0]
-            if match["group"] in group_key:
-                for team_dict in group_dict[group_key]:
-                    if match["team2"] in team_dict:
-                        team_dict[match["team2"]] += 3
-                break
+            if confidence is not None and 40 <= confidence <= 60:
+                #find the teams and both add one to their score. 
+                for group_dict in group_stage:
+                    group_key = list(group_dict.keys())[0]
+                    if match["group"] in group_key:
+                        for team_dict in group_dict[group_key]:
+                            if match["team1"] in team_dict:
+                                team_dict[match["team1"]] += 1
+                            if match["team2"] in team_dict:
+                                team_dict[match["team2"]] += 1
+                        break        
+            elif prediction == 0:
+                for group_dict in group_stage:
+                    group_key = list(group_dict.keys())[0]
+                    if match["group"] in group_key:
+                        for team_dict in group_dict[group_key]:
+                            if match["team1"] in team_dict:
+                                team_dict[match["team1"]] += 3
+                        break
+            elif prediction == 1:
+                for group_dict in group_stage:
+                    group_key = list(group_dict.keys())[0]
+                    if match["group"] in group_key:
+                        for team_dict in group_dict[group_key]:
+                            if match["team2"] in team_dict:
+                                team_dict[match["team2"]] += 3
+                        break
     return group_stage
 
 # in match pred - if conf is +- 10% from 50, match is tied/uncertain 
