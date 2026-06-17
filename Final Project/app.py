@@ -184,23 +184,39 @@ def match_predictor():
 
     prediction = None
     confidence = None
+    error = None
+    selected_team1 = None
+    selected_team2 = None
 
     if request.method == "POST":
 
         selected_team1 = request.form.get("team1")
         selected_team2 = request.form.get("team2")
 
-        if selected_team1 and selected_team2:
+        # Prevent same team selection
+        if selected_team1 == selected_team2:
+            error = "Please select two different teams."
+
+        elif selected_team1 and selected_team2:
+
             prediction, confidence = predict_match(
                 selected_team1,
                 selected_team2
             )
 
+            # uncertainty
+
+            if confidence is not None and 40 <= confidence <= 60:
+                prediction = "This match is too close to call (tie/uncertain)."
+
     return render_template(
         "match_predictor.html",
         teams=teams,
         prediction=prediction,
-        confidence=confidence
+        confidence=confidence,
+        error=error,
+        selected_team1=selected_team1,
+        selected_team2=selected_team2
     )
 
 
@@ -210,8 +226,86 @@ def match_predictor():
 )
 def wc_predictor():
 
-    return "World Cup Predictor Coming Soon"
+    teams = load_teams()
+    group_stage= [{"A" : []}, 
+                  {"B" : []}, 
+                  {"C" : []}, 
+                  {"D" : []}, 
+                  {"E" : []}, 
+                  {"F" : []}, 
+                  {"G" : []}, 
+                  {"H" : []},
+                  {"I" : []},
+                  {"J" : []},
+                  {"K" : []},
+                  {"L" : []},
+                 ]
+    #format: {"A": [{"Qatar" : 0}, "Ecuador", "Senegal", "Netherlands"]},  
+    for team in teams:
+        for group_dict in group_stage:
+            group_key = list(group_dict.keys())[0]
+            if team["group"] == group_key:
+                group_dict[group_key].append({team["team"]: 0})
+                break
+            
+    for match in load_matches():
+        if match["stage"] == "Group Stage":    
+            rank1 = team_lookup[match["team1"]]["rank"]
+            rank2 = team_lookup[match["team2"]]["rank"]
 
+            same_confederation = int(
+                team_lookup[match["team1"]]["confederation"]
+                ==
+                team_lookup[match["team2"]]["confederation"]
+    )
+
+    features = [[
+        rank1,
+        rank2,
+        rank1 - rank2,
+        same_confederation
+    ]]
+
+    probabilities = match_model.predict_proba(features)[0]
+
+    prediction = match_model.predict(features)[0]
+
+    confidence = round(
+        max(probabilities) * 100,
+        2
+    )
+
+    if confidence is not None and 40 <= confidence <= 60:
+        #find the teams and both add one to their score. 
+        for group_dict in group_stage:
+            group_key = list(group_dict.keys())[0]
+            if match["group"] in group_key:
+                for team_dict in group_dict[group_key]:
+                    if match["team1"] in team_dict:
+                        team_dict[match["team1"]] += 1
+                    if match["team2"] in team_dict:
+                        team_dict[match["team2"]] += 1
+                break        
+    elif prediction == 0:
+        for group_dict in group_stage:
+            group_key = list(group_dict.keys())[0]
+            if match["group"] in group_key:
+                for team_dict in group_dict[group_key]:
+                    if match["team1"] in team_dict:
+                        team_dict[match["team1"]] += 3
+                break
+    elif prediction == 1:
+        for group_dict in group_stage:
+            group_key = list(group_dict.keys())[0]
+            if match["group"] in group_key:
+                for team_dict in group_dict[group_key]:
+                    if match["team2"] in team_dict:
+                        team_dict[match["team2"]] += 3
+                break
+    return group_stage
+
+# in match pred - if conf is +- 10% from 50, match is tied/uncertain 
+# make sure you can't enter 2 of the same teams
 
 train_match_model()
 
