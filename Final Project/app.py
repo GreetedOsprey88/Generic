@@ -44,7 +44,7 @@ def load_matches():
 def load_2026_matches():
 
     with open(
-        "Final Project/wc_all_matches.json",
+        "Final Project/wc_2026_matches.json",
         "r",
         encoding="utf-8"
     ) as file:
@@ -176,7 +176,7 @@ def predict_match(team1, team2):
     else:
         result = "Draw"
 
-    return result, confidence
+    return result, confidence, prediction
 
 
 @app.route("/")
@@ -209,7 +209,7 @@ def match_predictor():
 
         elif selected_team1 and selected_team2:
 
-            prediction, confidence = predict_match(
+            prediction, confidence, a = predict_match(
                 selected_team1,
                 selected_team2
             )
@@ -250,6 +250,49 @@ def wc_predictor():
                   {"K" : []},
                   {"L" : []},
                  ]
+    knockout_stage = [
+        {"Round of 32": [   
+                        {},
+                        {},
+                        {},
+                        {},
+                        {},
+                        {},
+                        {},
+                        {},
+                        {},
+                        {},
+                        {},
+                        {},
+                        {},
+                        {},
+                        {},
+                        {}
+                ]},
+        {"Round of 16" : [ 
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+            ]},
+        {"Quarter-final": [
+                    {},
+                    {},
+                    {},
+                    {},
+                    
+            ]},
+        {"Semi-final" : [
+            {},
+            {}
+        ]},
+        {"Final" : {}},
+        {"3rd Place Match" : {}}
+    ]
     #format: {"A": [{"Qatar" : 0}, "Ecuador", "Senegal", "Netherlands"]},  
     for team in teams:
         for group_dict in group_stage:
@@ -262,22 +305,15 @@ def wc_predictor():
         if match["stage"] == "Group Stage":    
             
 
-            features = [[
+            result, confidence, prediction  = predict_match(
                 match["team1"],
                 match["team2"]
-            ]]
-
-
-            probabilities = match_model.predict_proba(features)[0]
-
-            prediction = match_model.predict(features)[0]
-
-            confidence = round(
-                max(probabilities) * 100,
-                2
             )
 
-            if confidence is not None and 40 <= confidence <= 60:
+            
+            if match["team2"] == "Canada":
+                print(prediction)
+            if confidence <= 65:
                 #find the teams and both add one to their score. 
                 for group_dict in group_stage:
                     group_key = list(group_dict.keys())[0]
@@ -285,10 +321,13 @@ def wc_predictor():
                         for team_dict in group_dict[group_key]:
                             if match["team1"] in team_dict:
                                 team_dict[match["team1"]] += 1
+                                print("Team one Have added")
                             if match["team2"] in team_dict:
                                 team_dict[match["team2"]] += 1
-                        break        
+                                print("team two have been added")
+                           
             elif prediction == 0:
+                print("Team one Won!")
                 for group_dict in group_stage:
                     group_key = list(group_dict.keys())[0]
                     if match["group"] in group_key:
@@ -297,6 +336,7 @@ def wc_predictor():
                                 team_dict[match["team1"]] += 3
                         break
             elif prediction == 1:
+                print("Team Two Won!")
                 for group_dict in group_stage:
                     group_key = list(group_dict.keys())[0]
                     if match["group"] in group_key:
