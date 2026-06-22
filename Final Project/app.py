@@ -19,6 +19,15 @@ match_model = HistGradientBoostingClassifier(
 team_lookup = {}
 model_accuracy = 0
 
+def clean_obj(obj):
+    if isinstance(obj, dict):
+        return {k: clean_obj(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [clean_obj(i) for i in obj]
+    elif isinstance(obj, str):
+        return obj.encode('ascii', 'ignore').decode()
+    else:
+        return obj
 
 def load_teams():
 
@@ -186,6 +195,9 @@ def home():
         "index.html"
     )
 
+@app.route("/wc_predictor_loading")
+def wc_predictor_loading():
+    return render_template("wc_loading.html")
 
 @app.route("/match_predictor", methods=["GET", "POST"])
 def match_predictor():
@@ -228,8 +240,19 @@ def match_predictor():
         selected_team1=selected_team1,
         selected_team2=selected_team2
     )
+@app.route("/process")
 
+def process():
+    
+    with open("Final Project/wc_2026_matches.json", 'r', encoding='utf-8') as f:
+        data = json.load(f)
 
+    cleaned_data = clean_obj(data)
+
+    with open("Final Project/wc_2026_matches.json", 'w', encoding='utf-8') as f:
+        json.dump(cleaned_data, f, ensure_ascii=False, indent=2)
+
+    return "jumpScare!"
 @app.route(
     "/wc_predictor",
     methods=["GET", "POST"]
@@ -251,24 +274,7 @@ def wc_predictor():
                   {"L" : []},
                  ]
     knockout_stage = [
-        {"Round of 32": [   
-                        {},
-                        {},
-                        {},
-                        {},
-                        {},
-                        {},
-                        {},
-                        {},
-                        {},
-                        {},
-                        {},
-                        {},
-                        {},
-                        {},
-                        {},
-                        {}
-                ]},
+        {"Round of 32": []},
         {"Round of 16" : [ 
                 {},
                 {},
@@ -344,10 +350,54 @@ def wc_predictor():
                             if match["team2"] in team_dict:
                                 team_dict[match["team2"]] += 3
                         break
-    return group_stage
+        
+            for group in group_stage:
+                group_key = list(group.keys())[0]
+                if match["group"] == group_key:
+                    teams_in_group = group[group_key]
+                    sorted_teams = sorted(teams_in_group, key=lambda x: list(x.values())[0], reverse=True)
+                    group[group_key] = sorted_teams
+        
 
-# in match pred - if conf is +- 10% from 50, match is tied/uncertain 
+        elif match["stage"] == "Round of 32":
+            a = list(match["team1"])
+            b = list(match["team2"])
+            
+            for group in group_stage:
+                group_key = list(group.keys())[0]
+                if group_key == a[1]:
+                    team1 = group[group_key][int(a[0]) - 1]
+                if group_key == b[1]:
+                    team2 = group[group_key][int(b[0]) - 1]           
+
+            knockout_stage[0]["Round of 32"].append({
+                "match_id": match["match_id"],
+                "stage" : match["stage"],
+                "team1": team1,
+                "team2": team2,
+                
+            })
+
+        elif match["stage"] == "Round of 16":
+            pass
+
+        elif match["stage"] == "Quarter-final":
+            pass
+
+        elif match["stage"] == "Semi-final":
+            pass
+
+        elif match["stage"] == "Final":
+            pass
+   
+    return render_template(
+    "wc_predictor.html",
+    knockout_stage=knockout_stage
+)
+# in match pred - if conf is +- 10% from 50, match is tied/uncertain
 # make sure you can't enter 2 of the same teams
+
+
 
 train_match_model()
 

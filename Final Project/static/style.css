@@ -152,3 +152,102 @@ button:hover {
 .feature-card p {
     color: #666;
 }
+
+body {
+    background: #0b1020;
+    color: white;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 15px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 28px;
+}
+
+/* Main bracket */
+.bracket {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 80px;
+    padding: 20px;
+}
+
+/* LEFT + RIGHT PANELS */
+.side {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Each round column */
+.round {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 150px;
+}
+
+/* MATCHES */
+.match {
+    width: 140px;
+    background: #18233b;
+    border: 2px solid #3857a6;
+    border-radius: 8px;
+    padding: 8px;
+}
+
+/* TEAMS */
+.team {
+    background: #24365f;
+    padding: 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    text-align: center;
+}
+
+/* CENTER FINAL COLUMN */
+.center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 220px;
+}
+
+.final {
+    border: 3px solid gold;
+    transform: scale(1.2);
+    margin: 40px 0;
+}
+
+.round-title {
+    text-align: center;
+    margin-bottom: 15px;
+    font-weight: bold;
+    color: #fbbf24;
+}
+
+/* stagger eng */
+
+/* Round of 32 */
+.side .round:nth-child(1) .match {
+    margin: 10px 0;
+}
+
+/* Round of 16 */
+.side .round:nth-child(2) .match {
+    margin: 40px 0;
+}
+
+/* Quarter-finals */
+.side .round:nth-child(3) .match {
+    margin: 100px 0;
+}
+
+/* Semi-finals */
+.side .round:nth-child(4) .match {
+    margin: 220px 0;
+}

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>World Cup Bracket</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+
+  <body>
+    <h1>FIFA World Cup 2026 Predictor</h1>
+
+    <div class="bracket">
+      <!-- LEFT SIDE -->
+      <div class="side">
+        <div class="round">
+          <div class="round-title">Round of 32</div>
+          {% for match in knockout_stage[0]["Round of 32"][:8] %}
+          <div class="match">
+            <div class="team">{{ match.get("team1","TBD") }}</div>
+            <div class="team">{{ match.get("team2","TBD") }}</div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="round">
+          <div class="round-title">Round of 16</div>
+          {% for match in knockout_stage[1]["Round of 16"][:4] %}
+          <div class="match">
+            <div class="team">{{ match.get("team1","TBD") }}</div>
+            <div class="team">{{ match.get("team2","TBD") }}</div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="round">
+          <div class="round-title">Quarter</div>
+          {% for match in knockout_stage[2]["Quarter-final"][:2] %}
+          <div class="match">
+            <div class="team">{{ match.get("team1","TBD") }}</div>
+            <div class="team">{{ match.get("team2","TBD") }}</div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="round">
+          <div class="round-title">Semi</div>
+          <div class="match">
+            <div class="team">
+              {{ knockout_stage[3]["Semi-final"][0].get("team1","TBD") }}
+            </div>
+            <div class="team">
+              {{ knockout_stage[3]["Semi-final"][0].get("team2","TBD") }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CENTER FINAL -->
+      <div class="center">
+        <h2>Final</h2>
+
+        <div class="match final">
+          <div class="team">
+            {{ knockout_stage[4]["Final"].get("team1","TBD") }}
+          </div>
+          <div class="team">
+            {{ knockout_stage[4]["Final"].get("team2","TBD") }}
+          </div>
+        </div>
+
+        <h3>Third Place</h3>
+
+        <div class="match">
+          <div class="team">
+            {{ knockout_stage[5]["3rd Place Match"].get("team1","TBD") }}
+          </div>
+          <div class="team">
+            {{ knockout_stage[5]["3rd Place Match"].get("team2","TBD") }}
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT SIDE -->
+      <div class="side">
+        <div class="round">
+          <div class="round-title">Semi</div>
+          <div class="match">
+            <div class="team">
+              {{ knockout_stage[3]["Semi-final"][1].get("team1","TBD") }}
+            </div>
+            <div class="team">
+              {{ knockout_stage[3]["Semi-final"][1].get("team2","TBD") }}
+            </div>
+          </div>
+        </div>
+
+        <div class="round">
+          <div class="round-title">Quarter</div>
+          {% for match in knockout_stage[2]["Quarter-final"][2:] %}
+          <div class="match">
+            <div class="team">{{ match.get("team1","TBD") }}</div>
+            <div class="team">{{ match.get("team2","TBD") }}</div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="round">
+          <div class="round-title">Round of 16</div>
+          {% for match in knockout_stage[1]["Round of 16"][4:] %}
+          <div class="match">
+            <div class="team">{{ match.get("team1","TBD") }}</div>
+            <div class="team">{{ match.get("team2","TBD") }}</div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="round">
+          <div class="round-title">Round of 32</div>
+          {% for match in knockout_stage[0]["Round of 32"][8:] %}
+          <div class="match">
+            <div class="team">{{ match.get("team1","TBD") }}</div>
+            <div class="team">{{ match.get("team2","TBD") }}</div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

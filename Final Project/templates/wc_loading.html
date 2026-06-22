@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Loading...</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #0f172a;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      .loading-container {
+        text-align: center;
+      }
+
+      .spinner {
+        width: 70px;
+        height: 70px;
+        border: 8px solid #334155;
+        border-top: 8px solid #38bdf8;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="loading-container">
+      <h1>Loading the World Cup...</h1>
+
+      <div class="spinner"></div>
+
+      <p>Please wait.</p>
+    </div>
+
+    <script>
+      window.onload = function () {
+        setTimeout(function () {
+          window.location.href = "/wc_predictor";
+        }, 500);
+      };
+    </script>
+  </body>
+</html>
