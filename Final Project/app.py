@@ -1,4 +1,6 @@
 import json
+import pickle
+import os
 
 from flask import Flask
 from flask import render_template
@@ -77,6 +79,29 @@ def build_team_lookup():
         }
 
 
+MODEL_FILE = "match_model.pkl"
+
+def save_model():
+    with open(MODEL_FILE, "wb") as f:
+        pickle.dump({
+            "model": match_model,
+            "team_lookup": team_lookup,
+            "accuracy": model_accuracy
+        }, f)
+
+
+def load_model():
+    global match_model
+    global team_lookup
+    global model_accuracy
+
+    with open(MODEL_FILE, "rb") as f:
+        data = pickle.load(f)
+
+    match_model = data["model"]
+    team_lookup = data["team_lookup"]
+    model_accuracy = data["accuracy"]
+
 def train_match_model():
 
     global model_accuracy
@@ -147,6 +172,8 @@ def train_match_model():
     print("Model trained successfully")
     print("Accuracy:", model_accuracy, "%")
     print()
+    
+    save_model()
 
 
 def predict_match(team1, team2):
@@ -253,6 +280,17 @@ def process():
         json.dump(cleaned_data, f, ensure_ascii=False, indent=2)
 
     return "jumpScare!"
+
+
+@app.route("/retrain")
+def retrain():
+
+    train_match_model()
+
+    return (
+        f"Model retrained successfully. "
+        f"Accuracy: {model_accuracy}%"
+    )
 @app.route(
     "/wc_predictor",
     methods=["GET", "POST"]
@@ -275,29 +313,13 @@ def wc_predictor():
                  ]
     knockout_stage = [
         {"Round of 32": []},
-        {"Round of 16" : [ 
-                {},
-                {},
-                {},
-                {},
-                {},
-                {},
-                {},
-                {}
-            ]},
-        {"Quarter-final": [
-                    {},
-                    {},
-                    {},
-                    {},
-                    
-            ]},
-        {"Semi-final" : [
-            {},
-            {}
-        ]},
-        {"Final" : {}},
-        {"3rd Place Match" : {}}
+        {"Round of 16" : []},
+        {"Quarter-final": []},
+        {"Semi-final" : []},
+        {"Final" : []},
+        {"3rd Place Match" : []},
+        {"Winner" : ""},
+        {"3rd" : ""}
     ]
     #format: {"A": [{"Qatar" : 0}, "Ecuador", "Senegal", "Netherlands"]},  
     for team in teams:
@@ -379,17 +401,216 @@ def wc_predictor():
             })
 
         elif match["stage"] == "Round of 16":
-            pass
+            a = match["team1"].split("-")[2]
+            b = match["team2"].split("-")[2]
+            for group in knockout_stage[0]["Round of 32"]:
+                
+                if group["match_id"].split("-")[1] == a:
+                    
+                    c = list(group["team1"].keys())[0]
+                    d = list(group["team2"].keys())[0]
+                    result, confidence, prediction  = predict_match(
+                        c,
+                        d
+                    )
+                    if prediction == 0:
+                        team1 = c
+                    elif prediction == 1:
+                        team1 = d
+
+                if group["match_id"].split("-")[1] == b:
+                    c = list(group["team1"].keys())[0]
+                    d = list(group["team2"].keys())[0]
+                    result, confidence, prediction  = predict_match(
+                        c,
+                        d
+                    )
+                    if prediction == 0:
+                        team2 = c
+                    elif prediction == 1:
+                        team2 = d
+
+            
+            knockout_stage[1]["Round of 16"].append({
+                "match_id": match["match_id"], # penis <====8 
+                "stage" : match["stage"],
+                "team1": team1,
+                "team2": team2,
+                
+            })
 
         elif match["stage"] == "Quarter-final":
-            pass
+            a = match["team1"].split("-")[2]
+            b = match["team2"].split("-")[2]
+            for group in knockout_stage[1]["Round of 16"]:
+                
+                if group["match_id"].split("-")[1] == a:
+                    print(group["team1"])
+                    c =group["team1"]
+                    d = group["team2"]
+                    result, confidence, prediction  = predict_match(
+                        c,
+                        d
+                    )
+                    if prediction == 0:
+                        team1 = c
+                    elif prediction == 1:
+                        team1 = d
+
+                if group["match_id"].split("-")[1] == b:
+                    c = group["team1"]
+                    d = group["team2"]
+                    result, confidence, prediction  = predict_match(
+                        c,
+                        d
+                    )
+                    if prediction == 0:
+                        team2 = c
+                    elif prediction == 1:
+                        team2 = d
+
+            print(team1, team2)
+            knockout_stage[2]["Quarter-final"].append({
+                "match_id": match["match_id"], # penis <====8 
+                "stage" : match["stage"],
+                "team1": team1,
+                "team2": team2,
+                
+            })
 
         elif match["stage"] == "Semi-final":
-            pass
+            a = match["team1"].split("-")[2]
+            b = match["team2"].split("-")[2]
+            for group in knockout_stage[2]["Quarter-final"]:
+                
+                if group["match_id"].split("-")[1] == a:
+                    print(group["team1"])
+                    c =group["team1"]
+                    d = group["team2"]
+                    result, confidence, prediction  = predict_match(
+                        c,
+                        d
+                    )
+                    if prediction == 0:
+                        team1 = c
+                    elif prediction == 1:
+                        team1 = d
 
+                if group["match_id"].split("-")[1] == b:
+                    c = group["team1"]
+                    d = group["team2"]
+                    result, confidence, prediction  = predict_match(
+                        c,
+                        d
+                    )
+                    if prediction == 0:
+                        team2 = c
+                    elif prediction == 1:
+                        team2 = d
+
+            print(team1, team2)
+            knockout_stage[3]["Semi-final"].append({
+                "match_id": match["match_id"], # penis <====8 
+                "stage" : match["stage"],
+                "team1": team1,
+                "team2": team2,
+                
+            })
         elif match["stage"] == "Final":
-            pass
+            a = match["team1"].split("-")[2]
+            b = match["team2"].split("-")[2]
+            for group in knockout_stage[3]["Semi-final"]:
+                
+                if group["match_id"].split("-")[1] == a:
+                    print(group["team1"])
+                    c =group["team1"]
+                    d = group["team2"]
+                    result, confidence, prediction  = predict_match(
+                        c,
+                        d
+                    )
+                    if prediction == 0:
+                        team1 = c
+                    elif prediction == 1:
+                        team1 = d
+
+                if group["match_id"].split("-")[1] == b:
+                    c = group["team1"]
+                    d = group["team2"]
+                    result, confidence, prediction  = predict_match(
+                        c,
+                        d
+                    )
+                    if prediction == 0:
+                        team2 = c
+                    elif prediction == 1:
+                        team2 = d
+
+            
+            knockout_stage[4]["Final"].append({
+                "match_id": match["match_id"], # penis <====8 
+                "stage" : match["stage"],
+                "team1": team1,
+                "team2": team2,
+                
+            })
+        elif match["stage"] == "3rd Place Match":
+            a = match["team1"].split("-")[2]
+            b = match["team2"].split("-")[2]
+            for group in knockout_stage[3]["Semi-final"]:
+                
+                if group["match_id"].split("-")[1] == a:
+                    print(group["team1"])
+                    c =group["team1"]
+                    d = group["team2"]
+                    result, confidence, prediction  = predict_match(
+                        c,
+                        d
+                    )
+                    if prediction == 0:
+                        team1 = d
+                    elif prediction == 1:
+                        team1 = c
+
+                if group["match_id"].split("-")[1] == b:
+                    c = group["team1"]
+                    d = group["team2"]
+                    result, confidence, prediction  = predict_match(
+                        c,
+                        d
+                    )
+                    if prediction == 0:
+                        team2 = d
+                    elif prediction == 1:
+                        team2 = c
+
+            
+            knockout_stage[5]["3rd Place Match"].append({
+                "match_id": match["match_id"], # penis <====8 
+                "stage" : match["stage"],
+                "team1": team1,
+                "team2": team2,
+                
+            })
    
+    result, confidence, prediction  = predict_match(
+        knockout_stage[4]["Final"][0]["team1"],
+        knockout_stage[4]["Final"][0]["team2"]
+    )
+    if prediction == 0:
+        knockout_stage[6]["Winner"] = team1
+    elif prediction == 1:
+        knockout_stage[6]["Winner"] = team2
+
+    result, confidence, prediction  = predict_match(
+        knockout_stage[5]["3rd Place Match"][0]["team1"],
+        knockout_stage[5]["3rd Place Match"][0]["team2"]
+    )
+    if prediction == 0:
+        knockout_stage[7]["3rd"] = knockout_stage[5]["3rd Place Match"][0]["team1"]
+    elif prediction == 1:
+        knockout_stage[7]["3rd"] = knockout_stage[5]["3rd Place Match"][0]["team2"]    
+    
     return render_template(
     "wc_predictor.html",
     knockout_stage=knockout_stage
@@ -399,7 +620,11 @@ def wc_predictor():
 
 
 
-train_match_model()
+if os.path.exists(MODEL_FILE):
+    load_model()
+    print(f"Loaded saved model ({model_accuracy}% accuracy)")
+else:
+    train_match_model()
 
 if __name__ == "__main__":
     app.run(debug=True)
