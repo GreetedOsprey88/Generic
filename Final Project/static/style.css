@@ -128,24 +128,33 @@ button:hover {
     padding: 80px 50px;
     flex-wrap: wrap;
     background: white;
+    justify-content: center; /* Centers horizontally */
+    align-items: center;     /* Centers vertically */
 }
 
 .feature-card {
     width: 300px;
     padding: 30px;
-    border-radius: 12px;
-    text-align: center;
+    border-radius: 12px;;
     background: #ffffff;
+    display: flex;  
     box-shadow: 0px 4px 20px rgba(0,0,0,0.1);
     transition: 0.3s;
     justify-content: center; /* Centers horizontally */
     align-items: center;     /* Centers vertically */
+             /* Add this */
+    flex-direction: column;  /* Add this */
+    
 }
 
 .feature-card:hover {
     transform: translateY(-8px);
+    justify-content: center; /* Centers horizontally */
+    align-items: center;     /* Centers vertically */
 }
-
+.label {
+    color : #000000;
+}
 .feature-card h2 {
     margin-bottom: 15px;
     color: #ea580c;
@@ -154,7 +163,11 @@ button:hover {
 .feature-card p {
     color: #666;
 }
-
+.feature-card form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 .bracket-page {
     background: #0b1020;
     color: white;

@@ -42,11 +42,7 @@
 
         <div class="feature-card">
 
-            <h2>
-                Model Accuracy:
-                {{ accuracy }}%
-            </h2>
-            # error msg
+            
             {% if error %}
             <p style="color: red;">
                 {{ error }}
@@ -55,7 +51,7 @@
 
             <form method="POST">
 
-                <label>
+                <label class="label">
                     Team 1
                 </label>
 
@@ -80,7 +76,7 @@
 
                 <br><br>
 
-                <label>
+                <label class="label">
                     Team 2
                 </label>
 
