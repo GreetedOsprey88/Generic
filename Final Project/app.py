@@ -344,20 +344,24 @@ def retrain():
 )
 def wc_predictor():
     # this is for the world cup group stage, I think I am having a bit of problemts but that is easily fixeddd. Check the error message. I don't know really how your ml works... Sry :(
+    
     teams = load_teams()
-    group_stage= [{"A" : []}, 
-                  {"B" : []}, 
-                  {"C" : []}, 
-                  {"D" : []}, 
-                  {"E" : []}, 
-                  {"F" : []}, 
-                  {"G" : []}, 
-                  {"H" : []},
-                  {"I" : []},
-                  {"J" : []},
-                  {"K" : []},
-                  {"L" : []},
-                 ]
+    
+    group_stage= [
+        {"A" : []}, 
+        {"B" : []}, 
+        {"C" : []}, 
+        {"D" : []}, 
+        {"E" : []}, 
+        {"F" : []}, 
+        {"G" : []}, 
+        {"H" : []},
+        {"I" : []},
+        {"J" : []},
+        {"K" : []},
+        {"L" : []},
+    ]
+    
     knockout_stage = [
         {"Round of 32": []},
         {"Round of 16" : []},

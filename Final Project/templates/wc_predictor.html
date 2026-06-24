@@ -46,55 +46,58 @@
         <div class="bracket">
 
         <!-- LEFT SIDE -->
-        <div class="side">
 
-            <div class="round">
-                <div class="round-title">Round of 32</div>
-                {% for match in r32[:8] %}
-                <div class="match">
-                  <div class="team">
-                    {{ match.get("team1", "TBD") }}
-                </div>
-                
-                <div class="team">
-                    {{ match.get("team2", "TBD") }}
-                </div>
-                </div>
-                {% endfor %}
+<div class="side">
+
+    
+    <div class="round round32">
+        <div class="round-title">Round of 32</div>
+        {% for match in r32[:8] %}
+        <div class="match">
+            <div class="team">
+                {{ match["team1"].keys() | list | first }}
             </div>
-
-            <div class="round">
-                <div class="round-title">Round of 16</div>
-                {% for match in r16[:4] %}
-                <div class="match">
-                    <div class="team">{{ match.get("team1", "TBD") }}</div>
-                    <div class="team">{{ match.get("team2", "TBD") }}</div>
-                </div>
-                {% endfor %}
+            <div class="team">
+                {{ match["team2"].keys() | list | first }}
             </div>
-
-            <div class="round">
-                <div class="round-title">Quarter-finals</div>
-                {% for match in qf[:2] %}
-                <div class="match">
-                    <div class="team">{{ match.get("team1", "TBD") }}</div>
-                    <div class="team">{{ match.get("team2", "TBD") }}</div>
-                </div>
-                {% endfor %}
-            </div>
-
-            <div class="round">
-                <div class="round-title">Semi-finals</div>
-
-                {% if sf|length > 0 %}
-                <div class="match">
-                    <div class="team">{{ sf[0].get("team1", "TBD") }}</div>
-                    <div class="team">{{ sf[0].get("team2", "TBD") }}</div>
-                </div>
-                {% endif %}
-            </div>
-
         </div>
+        {% endfor %}
+    </div>
+    
+    <div class="round round16">
+        <div class="round-title">Round of 16</div>
+        {% for match in r16[:4] %}
+        <div class="match">
+            <div class="team">{{ match.get("team1", "TBD") }}</div>
+            <div class="team">{{ match.get("team2", "TBD") }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="round qf">
+        <div class="round-title">Quarter-finals</div>
+        {% for match in qf[:2] %}
+        <div class="match">
+            <div class="team">{{ match.get("team1", "TBD") }}</div>
+            <div class="team">{{ match.get("team2", "TBD") }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="round sf">
+        <div class="round-title">Semi-finals</div>
+    
+        {% if sf|length > 0 %}
+        <div class="match">
+            <div class="team">{{ sf[0].get("team1", "TBD") }}</div>
+            <div class="team">{{ sf[0].get("team2", "TBD") }}</div>
+        </div>
+        {% endif %}
+    </div>
+    
+    
+    </div>
+    
 
         <!-- CENTER -->
         <div class="center">
@@ -126,58 +129,59 @@
         </div>
 
         <!-- RIGHT SIDE -->
-        <div class="side">
 
-            <div class="round">
-                <div class="round-title">Semi-finals</div>
+<div class="side">
 
-                {% if sf|length > 1 %}
-                <div class="match">
-                    <div class="team">{{ sf[1].get("team1", "TBD") }}</div>
-                    <div class="team">{{ sf[1].get("team2", "TBD") }}</div>
-                </div>
-                {% endif %}
-            </div>
-
-            <div class="round">
-                <div class="round-title">Quarter-finals</div>
-
-                {% for match in qf[2:] %}
-                <div class="match">
-                    <div class="team">{{ match.get("team1", "TBD") }}</div>
-                    <div class="team">{{ match.get("team2", "TBD") }}</div>
-                </div>
-                {% endfor %}
-            </div>
-
-            <div class="round">
-                <div class="round-title">Round of 16</div>
-
-                {% for match in r16[4:] %}
-                <div class="match">
-                    <div class="team">{{ match.get("team1", "TBD") }}</div>
-                    <div class="team">{{ match.get("team2", "TBD") }}</div>
-                </div>
-                {% endfor %}
-            </div>
-
-            <div class="round">
-                <div class="round-title">Round of 32</div>
-
-                {% for match in r32[8:] %}
-                <div class="match">
-                  <div class="team">
-                    {{ match.get("team1", "TBD") }}
-                </div>
-                
-                <div class="team">
-                    {{ match.get("team2", "TBD") }}
-                </div>
-                </div>
-                {% endfor %}
-            </div>
-
+    <div class="round sf">
+        <div class="round-title">Semi-finals</div>
+    
+        {% if sf|length > 1 %}
+        <div class="match">
+            <div class="team">{{ sf[1].get("team1", "TBD") }}</div>
+            <div class="team">{{ sf[1].get("team2", "TBD") }}</div>
         </div>
+        {% endif %}
+    </div>
+    
+    <div class="round qf">
+        <div class="round-title">Quarter-finals</div>
+    
+        {% for match in qf[2:] %}
+        <div class="match">
+            <div class="team">{{ match.get("team1", "TBD") }}</div>
+            <div class="team">{{ match.get("team2", "TBD") }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="round round16">
+        <div class="round-title">Round of 16</div>
+    
+        {% for match in r16[4:] %}
+        <div class="match">
+            <div class="team">{{ match.get("team1", "TBD") }}</div>
+            <div class="team">{{ match.get("team2", "TBD") }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="round round32">
+        <div class="round-title">Round of 32</div>
+    
+        {% for match in r32[8:] %}
+        <div class="match">
+            <div class="team">
+                {{ match["team1"].keys() | list | first }}
+            </div>
+    
+            <div class="team">
+                {{ match["team2"].keys() | list | first }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    </div>
 
     </div>
 </section>
