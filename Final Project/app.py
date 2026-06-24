@@ -124,6 +124,9 @@ def train_match_model():
         if team2 not in team_lookup:
             continue
 
+        if int(match["year"]) < 1994:
+            continue
+
         score1 = int(match["score1"])
         score2 = int(match["score2"])
 
@@ -143,13 +146,26 @@ def train_match_model():
             same_confederation
         ])
 
-        if score1 > score2:
-            y.append(0)
+        X.append([
+            rank2,
+            rank1,
+            rank2 - rank1,
+            same_confederation
+        ])
 
-        elif score2 > score1:
+        if score1 > score2:
+
+            y.append(0)
             y.append(1)
 
+        elif score2 > score1:
+
+            y.append(1)
+            y.append(0)
+
         else:
+
+            y.append(2)
             y.append(2)
 
     X_train, X_test, y_train, y_test = train_test_split(
@@ -175,7 +191,6 @@ def train_match_model():
     
     save_model()
 
-
 def predict_match(team1, team2):
 
     rank1 = team_lookup[team1]["rank"]
@@ -187,19 +202,51 @@ def predict_match(team1, team2):
         team_lookup[team2]["confederation"]
     )
 
-    features = [[
+    forward = [[
         rank1,
         rank2,
         rank1 - rank2,
         same_confederation
     ]]
 
-    prediction = match_model.predict(features)[0]
+    reverse = [[
+        rank2,
+        rank1,
+        rank2 - rank1,
+        same_confederation
+    ]]
 
-    probabilities = match_model.predict_proba(features)[0]
+    probs_forward = match_model.predict_proba(forward)[0]
+    probs_reverse = match_model.predict_proba(reverse)[0]
+
+    team1_win_prob = (
+        probs_forward[0]
+        +
+        probs_reverse[1]
+    ) / 2
+
+    team2_win_prob = (
+        probs_forward[1]
+        +
+        probs_reverse[0]
+    ) / 2
+
+    draw_prob = (
+        probs_forward[2]
+        +
+        probs_reverse[2]
+    ) / 2
+
+    probs = [
+        team1_win_prob,
+        team2_win_prob,
+        draw_prob
+    ]
+
+    prediction = probs.index(max(probs))
 
     confidence = round(
-        max(probabilities) * 100,
+        max(probs) * 100,
         2
     )
 

@@ -11,19 +11,39 @@
     />
 </head>
 
-<body>
-    <h1>FIFA World Cup 2026 Predictor</h1>
+<body class="bracket-page">
 
-    {% set r32 = knockout_stage[0]["Round of 32"] %}
-    {% set r16 = knockout_stage[1]["Round of 16"] %}
-    {% set qf = knockout_stage[2]["Quarter-final"] %}
-    {% set sf = knockout_stage[3]["Semi-final"] %}
-    {% set final_match = knockout_stage[4]["Final"][0] %}
-    {% set third_match = knockout_stage[5]["3rd Place Match"][0] %}
-    {% set winner = knockout_stage[6]["Winner"] %}
-    {% set third_place = knockout_stage[7]["3rd"] %}
+    <nav>
+        <div class="logo">World Cup Predictor</div>
 
-    <div class="bracket">
+        <ul>
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('match_predictor') }}">Match Predictor</a></li>
+            <li><a href="{{ url_for('wc_predictor') }}">World Cup Predictor</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero bracket-hero">
+    <div class="overlay"></div>
+
+    <div class="hero-content bracket-content">
+
+        <h1>FIFA World Cup 2026 Predictor</h1>
+
+        {% set r32 = knockout_stage[0]["Round of 32"] %}
+        {% set r16 = knockout_stage[1]["Round of 16"] %}
+        {% set qf = knockout_stage[2]["Quarter-final"] %}
+        {% set sf = knockout_stage[3]["Semi-final"] %}
+        {% set final_match = knockout_stage[4]["Final"][0] %}
+        {% set third_match = knockout_stage[5]["3rd Place Match"][0] %}
+        {% set winner = knockout_stage[6]["Winner"] %}
+        {% set third_place = knockout_stage[7]["3rd"] %}
+
+        <p>
+            Machine learning simulation of the entire FIFA World Cup.
+        </p>
+
+        <div class="bracket">
 
         <!-- LEFT SIDE -->
         <div class="side">
@@ -33,11 +53,11 @@
                 {% for match in r32[:8] %}
                 <div class="match">
                   <div class="team">
-                    {{ match["team1"].keys() | list | first }}
+                    {{ match.get("team1", "TBD") }}
                 </div>
                 
                 <div class="team">
-                    {{ match["team2"].keys() | list | first }}
+                    {{ match.get("team2", "TBD") }}
                 </div>
                 </div>
                 {% endfor %}
@@ -147,11 +167,11 @@
                 {% for match in r32[8:] %}
                 <div class="match">
                   <div class="team">
-                    {{ match["team1"].keys() | list | first }}
+                    {{ match.get("team1", "TBD") }}
                 </div>
                 
                 <div class="team">
-                    {{ match["team2"].keys() | list | first }}
+                    {{ match.get("team2", "TBD") }}
                 </div>
                 </div>
                 {% endfor %}
@@ -160,6 +180,7 @@
         </div>
 
     </div>
+</section>
 
 </body>
 </html>
